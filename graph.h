@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "list.h"
+#include "Map.h"
 
 typedef struct{
   void* data;
@@ -14,12 +15,14 @@ typedef struct{
 }ruta;
 
 typedef struct{
-  char identificador[50];
+  int id;
   int posicion[2];
   int visited;
 }Lugar;
 
-void leer_archivo(List*);
+void distancia_2_pts(Map*);
+
+void leer_archivo(Map*);
 
 node* createNode();
 

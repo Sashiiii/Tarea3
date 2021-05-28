@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 int is_equal_string(void * key1, void * key2) {
     if(strcmp((char*)key1, (char*)key2)==0) return 1;
@@ -54,15 +55,15 @@ void reset () {
   printf("\033[0;37m");
 }
 
-void yellow () {
-  printf("\033[0;33m");
+void color () {
+  printf("\033[1;32m");
 }
 
 void menu(){
     int num = 0;
-    List* lugares = create_list();
+    Map* lugares = createMap(is_equal_int);
     while(num!=9){
-        yellow();
+        color();
         printf("1.- Importar archivo de coordenadas\n");
         printf("2.- Calcular distancia entre 2 entregas\n");
         printf("3.- Mostrar 3 entregas mas cercanas a las coordenadas ingresadas\n");
@@ -80,10 +81,9 @@ void menu(){
         switch (num){
         case 1:
           leer_archivo(lugares);
-          printf("Archivo leido correctamente!\n");
             break;
         case 2:
-          printf("Estamos trabajando para usted!\n");
+          distancia_2_pts(lugares);
             break;
         case 3:
           printf("Estamos trabajando para usted!\n");
@@ -115,7 +115,7 @@ void menu(){
     }
 }
 
-void leer_archivo(List* lugares){
+void leer_archivo(Map*lugares){
   char archivo[20];
   int num_lineas, cont = 0;
   printf("~Por favor ingrese el archivo que se desea leer: ");
@@ -136,20 +136,40 @@ void leer_archivo(List* lugares){
     fgetc(archivoEntrada);
     Lugar* lugar = (Lugar *)malloc(sizeof(Lugar));
     datos = strtok(linea, " ");
-    strcpy(lugar->identificador, datos);
-    strcat(lugar->identificador, ",");
     lugar->posicion[0]=atoi(datos);
     datos = strtok(NULL, " ");
-    strcat(lugar->identificador, datos);
-    printf("%s\n", lugar->identificador);
+    
     lugar->posicion[1] = atoi(datos);
+    
+    printf("%d, ", lugar->posicion[0]);
+    printf("%d \n",lugar->posicion[1]);
 /* Se agrega en la lista los datos de la variable 'Lugar'. */
     lugar->visited = 0;
-    push_back(lugares, lugar);
+    lugar->id=cont+1;
+    insertMap(lugares,&lugar->id,lugar);
     cont++;
   }
   if (fclose(archivoEntrada) == EOF){
 /* Si hubo algun problema al cerrar el archivo se imprime el siguiente mensaje. */
     printf("El archivo no se pudo cerrar correctamente");
   }
+  else{
+    printf("El archivo se ha leido correctamente!\n");
+  }
+}
+
+void distancia_2_pts(Map* lugares){
+  int x,y;
+  Lugar* auxl1, *auxl2;
+  printf("Ingrese las id de las entregas las cuales va a calcular la distancia\n");
+  scanf("%d", &x);
+  scanf("%d", &y);
+  printf("La distancia entre la entrega %d y la entrega %d es: ", x, y);
+  auxl1=searchMap(lugares,&x);
+  auxl2=searchMap(lugares,&y);
+  float distancia;
+  float aux;
+  aux=pow( (auxl2->posicion[0] - auxl1->posicion[0]) ,2) + pow((auxl2->posicion[1] - auxl1->posicion[1]),2);
+  distancia=sqrt(aux);
+  printf("%.2f metros\n\n",distancia);
 }
