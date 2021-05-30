@@ -180,6 +180,7 @@ void puntos_cercanos(Map* lugares_id){
   lugar_d *l2 = (lugar_d *)malloc(sizeof(lugar_d));
   Lugar *l;
   Map* lugares_dist = createMap(is_equal_int);
+  setSortFunction(lugares_dist,lower_than_int);
   printf("Ingrese las coordenadas (x e y): ");
   scanf("%d %d", &l2->posicion[0], &l2->posicion[1]);
 //  printf("A");  
