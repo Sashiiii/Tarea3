@@ -5,28 +5,27 @@
 #include "Map.h"
 
 typedef struct{
+  List* orden_lugares;
+  char nombre[50];
+  int dist;
+}ruta;
+
+typedef struct{
   void* data;
   int dist_rec;
 }node;
 
 typedef struct{
-  List* orden_lugares;
-  char nombre[50];
-}ruta;
-
-typedef struct{
-  int id;
-  int posicion[2];
-  int visited;
-}Lugar;
-
-typedef struct{
   int posicion[2];
   int dist;
   int visited;
-}lugar_d;
+  int id;
+}Lugar;
 
-void puntos_cercanos(Map*);
+
+void crear_ruta(Map*, Map*);
+
+Map* puntos_cercanos(Map* lugares_id, Lugar* l2);
 
 float distancia(Map*, int, int);
 

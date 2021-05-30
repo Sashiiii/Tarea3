@@ -1,29 +1,30 @@
-#ifndef __defined_arraylist_h
-#define __defined_arraylist_h
+#ifndef List_h
+#define List_h
 
-#include <stdlib.h>
-#include <stdio.h>
+typedef struct List List;
 
-typedef struct Arraylist_Struct List;
+List * createList(void);
 
-List* create_list();
+void * firstList(List * list);
 
-void push_back(List* L, void* object);
+void * nextList(List * list);
 
-void pop_front(List* L);
+void * lastList(List * list);
 
-void pop_back(List* L);
+void * prevList(List * list);
 
-void pop_current(List* L);
+void pushFront(List * list, const void * data);
 
-int is_empty(List* L);
+void pushBack(List * list, const void * data);
 
-int size(List* L);
+void pushCurrent(List * list, const void * data);
 
-void* first(List* L);
+void * popFront(List * list);
 
-void* next(List* L);
+void * popBack(List * list);
 
-void clear(List* L);
+void * popCurrent(List * list);
 
-#endif /* __defined_arraylist_h */
+void cleanList(List * list);
+
+#endif /* List_h */

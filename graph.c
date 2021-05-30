@@ -40,15 +40,19 @@ int higher_than_int(void * key1, void * key2) {
     return 0;
 }
 
-node* createNode(){
-  node* n=(node*) malloc(sizeof(node));
-  return n;
-}
-
 node* copy(node* n){
     node* new=(node*) malloc(sizeof(node));
     *new = *n;
     return new;
+}
+
+void* createLugar(){
+  Lugar* l = (Lugar*)malloc(sizeof(Lugar));
+  l->posicion[0]=0;
+  l->posicion[1]=0;
+  l->visited=0;
+  l->id=0;
+  return l;
 }
 
 void reset () {
@@ -60,10 +64,16 @@ void color () {
 }
 
 void menu(){
+  Lugar *k;
   int x, y;
   float dist;
   int num = 0; //Variable para escoger en el menu
   Map* lugares_por_id = createMap(is_equal_int);
+  Map* rutas = createMap(is_equal_int);
+  setSortFunction(rutas,lower_than_int);
+  ruta* R = (ruta*)malloc(sizeof(ruta));
+  Map* lugares_dist;
+  Lugar *l2 = (Lugar *)malloc(sizeof(Lugar));
   while(num!=9){
     color();
     printf("1.- Importar archivo de coordenadas\n");
@@ -92,10 +102,20 @@ void menu(){
       printf("%.2f metros\n\n", dist);
         break;
     case 3:
-      puntos_cercanos(lugares_por_id);
+      printf("Ingrese las coordenadas (x e y): ");
+      scanf("%d %d", &l2->posicion[0], &l2->posicion[1]);
+      lugares_dist = puntos_cercanos(lugares_por_id, l2);
+      k = firstMap(lugares_dist);
+      printf("Posicion - distancia con el punto\n");
+      int cont = 0;
+      while (k&&cont<3){
+        printf("%d,%d %d \n", k->posicion[0], k->posicion[1], k->dist);
+        k = nextMap(lugares_dist);
+        cont++;
+      }
         break;
     case 4:
-      printf("Estamos trabajando para usted!\n");
+      crear_ruta(lugares_por_id, rutas);
         break;
     case 5:
       printf("Estamos trabajando para usted!\n");
@@ -107,7 +127,20 @@ void menu(){
       printf("Estamos trabajando para usted!\n");
         break;
     case 8:
-      printf("Estamos trabajando para usted!\n");
+      R = firstMap(rutas);
+      if(R == NULL){
+        printf("No hay rutas guardadas actualmente\n");
+      }
+      k = firstList(R->orden_lugares);
+      while(R->orden_lugares){
+        printf("%s: \n", R->nombre);
+        while(k){
+          printf("%d ", k->id);
+          k = nextList(R->orden_lugares);
+        }
+        printf("\nDistancia del recorrido:  %d\n", R->dist);
+        
+      }
         break;
     case 9:
       printf("Adios!\n");
@@ -140,7 +173,7 @@ void leer_archivo(Map*lugares){
   char *datos;
   while ((fscanf(archivoEntrada, "%[^\n]s", linea) != EOF) && cont<num_lineas){
     fgetc(archivoEntrada);
-    Lugar* lugar = (Lugar *)malloc(sizeof(Lugar));
+    Lugar* lugar = createLugar();
     datos = strtok(linea, " ");
     lugar->posicion[0]=atoi(datos);
     datos = strtok(NULL, " ");
@@ -150,7 +183,7 @@ void leer_archivo(Map*lugares){
     printf("%d \n",lugar->posicion[1]);
 /* Se agrega en la lista los datos de la variable 'Lugar'. */
     lugar->visited = 0;
-    lugar->id=cont+1;
+    lugar->id = cont+1;
     insertMap(lugares,&lugar->id,lugar);
     cont++;
   }
@@ -174,42 +207,90 @@ float distancia(Map* lugares, int x, int y){
   return distancia;
 }
 
-void puntos_cercanos(Map* lugares_id){
-  lugar_d *k;
-  lugar_d *lug = (lugar_d *)malloc(sizeof(lugar_d));
-  lugar_d *l2 = (lugar_d *)malloc(sizeof(lugar_d));
+Map* puntos_cercanos(Map* lugares_id, Lugar* l2){
+  Lugar *lug = createLugar();
   Lugar *l;
   Map* lugares_dist = createMap(is_equal_int);
   setSortFunction(lugares_dist,lower_than_int);
-  printf("Ingrese las coordenadas (x e y): ");
-  scanf("%d %d", &l2->posicion[0], &l2->posicion[1]);
-//  printf("A");  
   l = firstMap(lugares_id);
 
-  while(l!=NULL){
-    lug = (lugar_d *)malloc(sizeof(lugar_d));
-    lug->posicion[0] = l->posicion[0];
-    lug->posicion[1] = l->posicion[1];
-    lug->dist = sqrt(pow( (l2->posicion[0] - l->posicion[0]) ,2) + pow((l2->posicion[1] - l->posicion[1]),2));
-    insertMap(lugares_dist, &lug->dist, lug);
-//    printf("a");          
+  while(l!=NULL ){
+    if(lug->visited != 1){
+      lug = (Lugar *)malloc(sizeof(Lugar));
+      lug->id = l->id;
+      lug->posicion[0] = l->posicion[0];
+      lug->posicion[1] = l->posicion[1];
+      lug->dist = sqrt(pow( (l2->posicion[0] - l->posicion[0]) ,2) + pow((l2->posicion[1] - l->posicion[1]),2));
+      if(lug->dist != 0){
+        insertMap(lugares_dist, &lug->dist, lug);
+      }
+      l=nextMap(lugares_id);
+    }
+    
+  }
+  return lugares_dist;
+}
+
+/*
+Map* puntos_cercanos(Map* lugares_id, Lugar* l2){
+  //Lugar *lug = (Lugar*)malloc(sizeof(Lugar));
+  Lugar *l;
+  Map* lugares_dist = createMap(is_equal_int);
+  setSortFunction(lugares_dist,lower_than_int);
+  l = firstMap(lugares_id);
+  while(l!=NULL ){
+    l->dist = sqrt(pow( (l2->posicion[0] - l->posicion[0]) ,2) + pow((l2->posicion[1] - l->posicion[1]),2));
+    if(l->visited != 1 &&l->dist != 0){
+      insertMap(lugares_dist, &l->dist, l);
+    }
     l=nextMap(lugares_id);
   }
-//  printf("A");
-  k = firstMap(lugares_dist);
-  printf("Posicion - distancia con el punto\n");
-  int cont = 0;
-  while (k&&cont<3){
-    printf("%d,%d %d ", k->posicion[0], k->posicion[1], k->dist);
-    printf("\n");
-    k=nextMap(lugares_dist);
-    cont++;
+  return lugares_dist;
+}
+*/
+void crear_ruta(Map* lugares_id, Map* rutas){
+  Lugar* aux,*k, *inicio = (Lugar*)malloc(sizeof(Lugar)), *destino;
+  ruta* Ruta = (ruta*)malloc(sizeof(ruta));
+  Ruta->orden_lugares = createList();
+  Ruta->dist = 0;
+  Map* lugares_dist = createMap(is_equal_int);
+  int id, dist;
+  setSortFunction(lugares_dist,lower_than_int);
+  printf("Ingrese las coordenadas iniciales (x e y): ");
+  scanf("%d %d", &inicio->posicion[0], &inicio->posicion[1]);
+  inicio->dist = 0;
+  inicio->visited = 0;
+  inicio->id = 0;
+  pushBack(Ruta->orden_lugares,inicio);
+  lugares_dist = puntos_cercanos(lugares_id, inicio);
+
+  while(k){
+    k = firstMap(lugares_dist);
+    printf("id - posicion - distancia con el punto anterior ingresado\n");
+    while(k){
+      if(k->visited!=1){
+        printf("%d - %d,%d - %d\n",k->id, k->posicion[0], k->posicion[1],k->dist);  
+      }    
+      k = nextMap(lugares_dist);
+    }
+    do {
+      printf("ingrese id de posicion a la que desea continuar: ");
+      scanf("%d", &destino->id);
+      destino = searchMap(lugares_id, &destino->id);
+    }while(destino->visited==1);
+    //destino = searchMap(lugares_id, &destino->id);
+    Ruta->dist+= destino->dist;
+    eraseMap(lugares_dist, &destino->dist);
+    eraseMap(lugares_id, &destino->id);
+    destino->visited = 1;
+    insertMap(lugares_id, &destino->id, destino);
+    pushBack(Ruta->orden_lugares, destino);
+    lugares_dist = puntos_cercanos(lugares_id, destino);
+    //insertMap(lugares_dist, &destino->dist, destino);   
+    k = firstMap(lugares_dist);
   }
-/*
-  lug = firstMap(lugares_dist);
-  printf("posicion: %d,%d distancia: %d\n", lug->posicion[0], lug->posicion[1], lug->dist);
-  for(int z = 0; z<2;z++){
-    lug = nextMap(lugares_dist);
-    printf("posicion: %d%d distancia: %d\n", lug->posicion[0], lug->posicion[1], lug->dist);
-  }*/
+  printf("ingrese nombre para la ruta ingresada: ");
+  fgets(Ruta->nombre, 49, stdin);
+  insertMap(rutas, Ruta->nombre ,Ruta);
+
 }
