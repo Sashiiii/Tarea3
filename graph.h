@@ -20,7 +20,15 @@ typedef struct{
   int visited;
 }Lugar;
 
-void distancia_2_pts(Map*);
+typedef struct{
+  int posicion[2];
+  int dist;
+  int visited;
+}lugar_d;
+
+void puntos_cercanos(Map*);
+
+float distancia(Map*, int, int);
 
 void leer_archivo(Map*);
 

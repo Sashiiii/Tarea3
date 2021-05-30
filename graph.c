@@ -60,57 +60,63 @@ void color () {
 }
 
 void menu(){
-    int num = 0;
-    Map* lugares = createMap(is_equal_int);
-    while(num!=9){
-        color();
-        printf("1.- Importar archivo de coordenadas\n");
-        printf("2.- Calcular distancia entre 2 entregas\n");
-        printf("3.- Mostrar 3 entregas mas cercanas a las coordenadas ingresadas\n");
-        printf("4.- Crear ruta\n");
-        printf("5.- Generar ruta aleatoria\n");
-        printf("6.- Mejorar ruta\n");
-        printf("7.- Mostrar rutas\n");
-        printf("8.- Mejor ruta\n");
-        printf("9.- Salir\n");
-        reset();
-        printf("~Ingrese el numero que corresponda a la operacion que desea realizar: ");
-        scanf("%d", &num);
-        printf("\n");
-        reset();
-        switch (num){
-        case 1:
-          leer_archivo(lugares);
-            break;
-        case 2:
-          distancia_2_pts(lugares);
-            break;
-        case 3:
-          printf("Estamos trabajando para usted!\n");
-            break;
-        case 4:
-          printf("Estamos trabajando para usted!\n");
-            break;
-        case 5:
-          printf("Estamos trabajando para usted!\n");
-            break;
-        case 6:
-          printf("Estamos trabajando para usted!\n");
-            break;
-        case 7:
-          printf("Estamos trabajando para usted!\n");
-            break;
-        case 8:
-          printf("Estamos trabajando para usted!\n");
-            break;
-        case 9:
-          printf("Adios!\n");
-          return;
-            break;
-        default:
-          printf("La opcion ingresada no es valida, elija nuevamente\n\n");
-          menu();
-            break;
+  int x, y;
+  float dist;
+  int num = 0; //Variable para escoger en el menu
+  Map* lugares_por_id = createMap(is_equal_int);
+  while(num!=9){
+    color();
+    printf("1.- Importar archivo de coordenadas\n");
+    printf("2.- Calcular distancia entre 2 entregas\n");
+    printf("3.- Mostrar 3 entregas mas cercanas a las coordenadas ingresadas\n");
+    printf("4.- Crear ruta\n");
+    printf("5.- Generar ruta aleatoria\n");
+    printf("6.- Mejorar ruta\n");
+    printf("7.- Mostrar rutas\n");
+    printf("8.- Mejor ruta\n");
+    printf("9.- Salir\n");
+    reset();
+    printf("~Ingrese el numero que corresponda a la operacion que desea realizar: ");
+    scanf("%d", &num);
+    printf("\n");
+  switch (num){
+    case 1:
+      leer_archivo(lugares_por_id);
+        break;
+    case 2:
+      printf("Ingrese las id de las entregas las cuales va a calcular la distancia: ");
+      scanf("%d", &x);
+      scanf("%d", &y);
+      dist = distancia(lugares_por_id, x, y);
+      printf("La distancia entre la entrega %d y la entrega %d es: ", x, y);
+      printf("%.2f metros\n\n", dist);
+        break;
+    case 3:
+      puntos_cercanos(lugares_por_id);
+        break;
+    case 4:
+      printf("Estamos trabajando para usted!\n");
+        break;
+    case 5:
+      printf("Estamos trabajando para usted!\n");
+        break;
+    case 6:
+      printf("Estamos trabajando para usted!\n");
+        break;
+    case 7:
+      printf("Estamos trabajando para usted!\n");
+        break;
+    case 8:
+      printf("Estamos trabajando para usted!\n");
+        break;
+    case 9:
+      printf("Adios!\n");
+        return;
+          break;
+    default:
+      printf("La opcion ingresada no es valida, elija nuevamente\n\n");
+        menu();
+          break;
         }
     }
 }
@@ -138,7 +144,6 @@ void leer_archivo(Map*lugares){
     datos = strtok(linea, " ");
     lugar->posicion[0]=atoi(datos);
     datos = strtok(NULL, " ");
-    
     lugar->posicion[1] = atoi(datos);
     
     printf("%d, ", lugar->posicion[0]);
@@ -158,18 +163,52 @@ void leer_archivo(Map*lugares){
   }
 }
 
-void distancia_2_pts(Map* lugares){
-  int x,y;
+float distancia(Map* lugares, int x, int y){
   Lugar* auxl1, *auxl2;
-  printf("Ingrese las id de las entregas las cuales va a calcular la distancia\n");
-  scanf("%d", &x);
-  scanf("%d", &y);
-  printf("La distancia entre la entrega %d y la entrega %d es: ", x, y);
   auxl1=searchMap(lugares,&x);
   auxl2=searchMap(lugares,&y);
   float distancia;
   float aux;
   aux=pow( (auxl2->posicion[0] - auxl1->posicion[0]) ,2) + pow((auxl2->posicion[1] - auxl1->posicion[1]),2);
   distancia=sqrt(aux);
-  printf("%.2f metros\n\n",distancia);
+  return distancia;
+}
+
+void puntos_cercanos(Map* lugares_id){
+  lugar_d *k;
+  lugar_d *lug = (lugar_d *)malloc(sizeof(lugar_d));
+  lugar_d *l2 = (lugar_d *)malloc(sizeof(lugar_d));
+  Lugar *l;
+  Map* lugares_dist = createMap(is_equal_int);
+  printf("Ingrese las coordenadas (x e y): ");
+  scanf("%d %d", &l2->posicion[0], &l2->posicion[1]);
+//  printf("A");  
+  l = firstMap(lugares_id);
+
+  while(l!=NULL){
+    lug = (lugar_d *)malloc(sizeof(lugar_d));
+    lug->posicion[0] = l->posicion[0];
+    lug->posicion[1] = l->posicion[1];
+    lug->dist = sqrt(pow( (l2->posicion[0] - l->posicion[0]) ,2) + pow((l2->posicion[1] - l->posicion[1]),2));
+    insertMap(lugares_dist, &lug->dist, lug);
+//    printf("a");          
+    l=nextMap(lugares_id);
+  }
+//  printf("A");
+  k = firstMap(lugares_dist);
+  printf("Posicion - distancia con el punto\n");
+  int cont = 0;
+  while (k&&cont<3){
+    printf("%d,%d %d ", k->posicion[0], k->posicion[1], k->dist);
+    printf("\n");
+    k=nextMap(lugares_dist);
+    cont++;
+  }
+/*
+  lug = firstMap(lugares_dist);
+  printf("posicion: %d,%d distancia: %d\n", lug->posicion[0], lug->posicion[1], lug->dist);
+  for(int z = 0; z<2;z++){
+    lug = nextMap(lugares_dist);
+    printf("posicion: %d%d distancia: %d\n", lug->posicion[0], lug->posicion[1], lug->dist);
+  }*/
 }
