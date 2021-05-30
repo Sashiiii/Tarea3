@@ -1,6 +1,6 @@
 Tarea 3 
 --------------------------------------------------
- - Funcion 4 por alguna razon solo toma primer lugar ingresado y despues toma como si todo el resto tuviera visited = 1 y no dej aingresar mas datos
+ - Funcion 4 por alguna razon solo toma primer lugar ingresado y despues toma como si todo el resto tuviera visited = 1 y no deja ingresar mas datos
 
 
 --------------------------------------------------
