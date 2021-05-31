@@ -6,3 +6,4 @@ Tarea 3
 --------------------------------------------------
 Caracteristicas positivas y a mejorar:
  - Camila Barrera: Cierra archivos por accidente sin guardar muy seguido.
+ - Marcelo Galvez: Falta modularizar para ahorrar tiempo y lineas de codigo
