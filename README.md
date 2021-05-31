@@ -1,5 +1,7 @@
 Tarea 3 
 --------------------------------------------------
+el objetivo de nuestra tarea es programar una solucion al problema del vendedor viajero o TSP, que consiste en que se busca recorrer una serie de localizaciones desde un punto de origen, pasando por cada uno solo una vez y finalmente devolviendose al punto de origen en la menor distancia posible.
+--------------------------------------------------
  - Funcion de opcion 4 por alguna razon solo toma primer lugar ingresado y despues toma como si todo el resto tuviera visited = 1 y no deja ingresar mas datos, si se cambia el visited o el auxiliar el programa se crashea
 
  - Funcion de opcion 5 genera numeros aleatorios pero al cambiar visited a 0, se pueden repetir, pero si no se cambia de vuelta el programa crashea, y si se iguala a un nuevo Lugar*, igualmente, el programa deja de funcionar
