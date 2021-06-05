@@ -7,7 +7,7 @@
 typedef struct{
   List* orden_lugares;
   char nombre[50];
-  int dist;
+  long dist;
 }ruta;
 
 typedef struct{
@@ -22,6 +22,7 @@ typedef struct{
   int id;
 }Lugar;
 
+void crear_rutaOptima(Map* , Map*);
 
 void crear_ruta(Map*, Map*);
 
@@ -38,3 +39,4 @@ node* copy(node* n);
 void crear_ruta();
 
 void menu();
+
