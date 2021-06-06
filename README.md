@@ -2,15 +2,13 @@ Tarea 3
 --------------------------------------------------
 el objetivo de nuestra tarea es programar una solucion al problema del vendedor viajero o TSP, que consiste en que se busca recorrer una serie de localizaciones desde un punto de origen, pasando por cada uno solo una vez y finalmente devolviendose al punto de origen en la menor distancia posible.
 --------------------------------------------------
- - Funcion de opcion 4 por alguna razon solo toma primer lugar ingresado y despues toma como si todo el resto tuviera visited = 1 y no deja ingresar mas datos, si se cambia el visited o el auxiliar el programa se crashea
+ - ninguna funcion muestra al final el punto de inicio al final, ni la distancia entre el ultimo punto ingresado y este.
 
  - Funcion de opcion 5 genera numeros aleatorios pero al cambiar visited a 0, se pueden repetir, pero si no se cambia de vuelta el programa crashea, y si se iguala a un nuevo Lugar*, igualmente, el programa deja de funcionar
 
  - Para la funcion 6 se le deberia pedir al usuario que ingrese el nombre de la ruta que quiere mejorar, para despues pedirle que ingrese un numero para entrar a un switch en que se hace el cambio automatico o manual. se usaria un ciclo y auxiliares para cambiar el orden de la lista, calculando la distancia en el proceso y sumandola en la esttructura ruta*, una vez lista, se compara la distancia final con la inicial, si la nueva es mas rapida, esta reemplazara a la antigua, de lo contrario, la lista nueva es descartada
 
- - Para la funcion 7 se hace un ciclo que atraviese el mapa de rutas, que a su vez posee un ciclo para recorrer los lugares de la ruta, para poder mostrarlos por pantalla, siendo delimitados por el momento en que los auxiliares lleguen a NULL
-
- - Para la ultima funcion se le pide al usuario que ingrese sus coordenadas para aplicar la funcion puntos_cercanos, para despues hacer una ruta por cada combinacion, con el objetivo de comparar las distancias finales de cada ruta, quedandonos con la que tiene menor distancia recorrida, guardandola con el nombre de "ruta optima"
+ - Para la ultima funcion se le pide al usuario que ingrese sus coordenadas para aplicar la funcion puntos_cercanos, para despues hacer una ruta por cada combinacion, con el objetivo de comparar las distancias finales de cada ruta, quedandonos con la que tiene menor distancia recorrida, guardandola con el nombre de "ruta optima", en lugar de usar grafos
 
 --------------------------------------------------
 Caracteristicas positivas y a mejorar:
