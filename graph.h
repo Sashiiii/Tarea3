@@ -22,7 +22,9 @@ typedef struct{
   int id;
 }Lugar;
 
-void crear_rutaOptima(Map* , Map*);
+/* void crear_ruta_aleatoria (Map*, Map*); */
+
+void crear_rutaOptima(Map*, Map*);
 
 void crear_ruta(Map*, Map*);
 
